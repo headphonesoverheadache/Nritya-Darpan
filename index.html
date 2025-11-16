@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nritya Darpan - Mirror of India's True Rhythm</title>
+    <!-- Load Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for a classical feel */
+        :root {
+            --primary-dark: #6C3428; /* Deep Mahogany */
+            --primary-light: #B77A55; /* Warm Tan */
+            --accent: #E5A84F; /* Gold Accent */
+        }
+        .text-rhythm { color: var(--primary-dark); }
+        .bg-rhythm { background-color: var(--primary-dark); }
+        .border-rhythm { border-color: var(--accent); }
+        .text-accent { color: var(--accent); }
+
+        .sidebar-button {
+            transition: all 0.2s;
+            text-align: left;
+        }
+        /* Custom scroll spy effect for active link */
+        .sidebar-button:target {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        /* Responsive adjustments for mobile */
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; }
+            .content-area { padding: 1rem; }
+            /* Detail layout: stack sidebar on top of content */
+            #detail-layout .flex { flex-direction: column; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- Header -->
+    <header class="bg-rhythm text-white shadow-xl">
+        <div class="p-6 text-center">
+            <h1 class="text-4xl font-extrabold tracking-wider">Nritya Darpan</h1>
+            <p class="text-sm italic opacity-80 mt-1">Mirror of India's True Rhythm</p>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="main-container flex min-h-screen">
+        <main id="main-content-area" class="content-area flex-grow p-8">
+            
+            <!-- 1. Home View: Two large buttons (Initial Page) -->
+            <section id="home-view" class="content-section flex flex-col items-center justify-center min-h-[70vh] text-center">
+                <h2 class="text-4xl font-extrabold text-rhythm mb-12">Welcome to Nritya Darpan</h2>
+                
+                <div class="grid md:grid-cols-2 gap-8 w-full max-w-4xl">
+                    <!-- Option 1: Learn Your Style -->
+                    <button class="p-8 bg-white border-2 border-primary-light text-rhythm rounded-2xl shadow-xl hover:shadow-2xl hover:border-accent transition duration-300 transform hover:scale-[1.02]" 
+                            onclick="showView('learn')">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
+                        <span class="text-2xl font-bold">Learn Your Style</span>
+                        <p class="mt-2 text-sm text-gray-600">Explore the history, costumes, and techniques of classical Indian dance.</p>
+                    </button>
+                    
+                    <!-- Option 2: Test Your Knowledge -->
+                    <button class="p-8 bg-white border-2 border-primary-light text-rhythm rounded-2xl shadow-xl hover:shadow-2xl hover:border-accent transition duration-300 transform hover:scale-[1.02]" 
+                            onclick="showView('quiz-select')">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M10 16h.01"></path></svg>
+                        <span class="text-2xl font-bold">Test Your Knowledge</span>
+                        <p class="mt-2 text-sm text-gray-600">Challenge yourself with flashcards and quizzes on the various styles.</p>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- 2. Style Selection View: 8 Blocks (Shared by Learn and Quiz) -->
+            <section id="style-selection-view" class="content-section hidden">
+                <h2 class="text-3xl font-bold text-rhythm mb-6" id="selection-title">Select a Classical Dance Style</h2>
+                <p class="mb-8 text-gray-600" id="selection-subtitle">Click on a tile to delve deep into the specifics of its tradition.</p>
+                
+                <div id="style-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Style blocks generated by JS -->
+                </div>
+                <button onclick="showView('home')" class="mt-10 px-6 py-2 bg-gray-200 text-rhythm rounded-lg hover:bg-gray-300 transition duration-150 shadow">← Back to Home</button>
+            </section>
+
+            <!-- 3. Detail Layout: Dynamic Sidebar + Content -->
+            <section id="detail-layout" class="content-section hidden">
+                <div class="flex flex-col md:flex-row shadow-xl rounded-xl overflow-hidden min-h-[600px]">
+                    <!-- Dynamic Sidebar -->
+                    <nav id="detail-sidebar" class="md:w-64 w-full bg-white p-4 flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-200"></nav>
+
+                    <!-- Detail Content -->
+                    <div id="style-detail-content" class="flex-grow p-6 bg-white">
+                        <h3 id="styleDetailTitle" class="text-2xl font-extrabold text-accent mb-6"></h3>
+                        <button onclick="showView('learn')" class="mb-4 px-4 py-1 text-sm bg-gray-100 text-rhythm rounded-full hover:bg-gray-200 transition duration-150">← Back to Styles</button>
+                        <div id="styleContent" class="space-y-8">
+                            <!-- Content injected here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- 4. Quiz View (Only appears after selection) -->
+            <section id="quiz-view" class="content-section hidden">
+                <h2 class="text-3xl font-bold text-rhythm mb-6">Quiz Time!</h2>
+                <div id="quizContainer" class="mt-8 p-6 bg-white border border-gray-200 rounded-xl shadow-lg max-w-lg mx-auto">
+                    <h3 id="quizTitle" class="text-2xl font-extrabold text-accent mb-6 text-center"></h3>
+                    <!-- The flashcard text is now dark for contrast -->
+                    <div id="flashcard" class="bg-primary-light text-rhythm p-8 rounded-lg shadow-xl text-center">
+                        <p class="text-xl mb-4">Select a style to begin your flashcard quiz!</p>
+                    </div>
+                    <button onclick="showView('quiz-select')" class="mt-6 text-sm text-gray-500 hover:text-rhythm transition duration-150">← Back to Quiz Selection</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Custom Modal for Messages (Replacing alert/confirm) -->
+    <div id="customModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full">
+            <h4 id="modalTitle" class="text-xl font-bold mb-3 text-rhythm"></h4>
+            <p id="modalBody" class="mb-5 text-gray-700"></p>
+            <button onclick="hideModal()" class="w-full py-2 bg-accent text-white rounded-lg hover:bg-yellow-700 transition duration-150">Close</button>
+        </div>
+    </div>
+
+
+<script>
+    // --- Data Model for 8 Classical Dance Styles (Dancers list stored as Array) ---
+    const DANCE_DATA = {
+        'bn': {
+            id: 'bn', name: 'Bharatanatyam', origin: 'Tamil Nadu',
+            details: {
+                mythology: "Originates from the Sadir, dance of the temple 'devadasis,' deeply rooted in the ancient Indian treatise, the Natya Shastra.",
+                costumes: "A specialized stitched saree-like garment, elaborate gold and stone jewelry, characteristic 'kuchu' pleats, and ghungroos (ankle bells).",
+                mudras: "Uses 28 Asamyukta (single hand) and 24 Samyukta (double hand) hastas. Key examples include Pataka (Flag) and Mayura (Peacock).",
+                glossary: "Core elements include Adavus (basic steps), Kshetras (postures), Bhava (expression), Raga (melody), and Tala (rhythm).",
+                dancers: ["Rukmini Devi Arundale", "Bala Saraswati", "Yamini Krishnamurthy", "Padma Subrahmanyam"],
+                arangetram: "This is the solo debut performance, usually requiring a minimum age of 14-16 years** after intensive training.",
+            }
+        },
+        'ktk': {
+            id: 'ktk', name: 'Kathak', origin: 'Uttar Pradesh',
+            details: {
+                mythology: "Known for storytelling (Katha) by wandering bards in North Indian temples, later migrating to the sophisticated Mughal courts.",
+                costumes: "Typically a Lehenga-choli or churidar-kurta with a veil (North Indian/Mughal style) or a saree (traditional Jaipur Gharana style).",
+                mudras: "Features subtle hand movements reflecting expressions (abhinaya), focused more on gestures than geometric poses. Examples include Kartarimukha and Ardhachandra.",
+                glossary: "Key rhythmic elements are Tukras, Todas, and Paran (rhythmic compositions), Tatkar (pure footwork), and Amad (the introductory piece).",
+                dancers: ["Birju Maharaj", "Sitara Devi", "Shovana Narayan", "Kumudini Lakhia"],
+                arangetram: "Varies widely by Gharana, often performed after 8-10 years of dedicated training.",
+            }
+        },
+        'ktkl': {
+            id: 'ktkl', name: 'Kathakali', origin: 'Kerala',
+            details: {
+                mythology: "A vibrant 'story play' dance-drama drawing themes primarily from Hindu epics like the Ramayana and Mahabharata.",
+                costumes: "Involves elaborate, heavy costumes, massive headdresses, and intricate facial makeup (Pacha, Kathi, Kari, Thadi) which defines the character's nature.",
+                mudras: "Utilizes a complex vocabulary of 24 main mudras based on the Hastalakshana Deepika text, used to convey the narrative.",
+                glossary: "Kaliyattam (the performance), Attakatha (the story text), and Kalasams (intense, vigorous dance sequences).",
+                dancers: ["Kalamandalam Krishnan Nair", "Kottakkal Sivaraman", "Ramankutty Nair"],
+                arangetram: "Not typically applicable as it is a professional debut into an ensemble dance-drama form.",
+            }
+        },
+        'mpr': {
+            id: 'mpr', name: 'Manipuri', origin: 'Manipur',
+            details: {
+                mythology: "Strongly linked to the worship of **Radha and Krishna** (Ras Leela), known for its graceful, fluid, and circular movements.",
+                costumes: "The **Kubak** (stiff, cylindrical skirt) adorned with mirrors, a sheer veil, and specific head ornaments are characteristic.",
+                mudras: "Features soft, suggestive mudras, often held close to the body, emphasizing devotion and grace. Examples: **Chatura**, **Hamsasya**.",
+                glossary: "Focuses on the interplay between **Tandava** (vigorous) and **Lasya** (gentle) elements, and features **Pung Cholom** (the drum dance).",
+                dancers: ["Guru Bipin Singh", "Jhaveri Sisters", "Ranjini Devi"],
+                arangetram: "A formal Arangetram is **not a standard practice**; debut performances are usually within a group context.",
+            }
+        },
+        'ods': {
+            id: 'ods', name: 'Odissi', origin: 'Odisha',
+            details: {
+                mythology: "Originally performed by **Maharis** (temple dancers), the dance focuses on the love of Radha and Krishna and the tales of **Lord Jagannath**.",
+                costumes: "Brightly colored silk saree (often check-patterned), **silver jewelry** (unlike the gold in Bharatanatyam), and the Trikachha style drape.",
+                mudras: "Known for the sculptural poses, primarily the **Tribhangi** (triple bend) and the **Chowka** (square position).",
+                glossary: "Mangalacharan (invocation), Pallavi (pure dance based on melody), and **Moksha** (the final liberation piece).",
+                dancers: ["Sanjukta Panigrahi", "Kelucharan Mohapatra", "Sonal Mansingh", "Madhavi Mudgal"],
+                arangetram: "Requires a minimum of 7-10 years of intensive training before the solo debut.",
+            }
+        },
+        'sst': {
+            id: 'sst', name: 'Sattriya', origin: 'Assam',
+            details: {
+                mythology: "Introduced by the 15th-century saint Srimanta Sankardev as a powerful tool for propagating the Vaishnava faith within monasteries (**Sattras**).",
+                costumes: "Traditional Assamese Pat or Muga silk dhoti and chadar, distinct headgear (for male roles), and minimal, traditional Assamese jewelry.",
+                mudras: "Uses specific hastas unique to the tradition, strongly emphasizing Bhakti (devotion) and narrative clarity.",
+                glossary: "Mati Akharas (ground exercises/fundamentals), Jhumuras (group dances), and the Sutradhara (narrator) who links the performance.",
+                dancers: ["Jatin Goswami", "Maniram Dutta Moktar", "Anwesa Mahanta"],
+                arangetram: "Focuses on performing within the Sattra (monastery) environment rather than a single formal debut.",
+            }
+        },
+        'kmr': {
+            id: 'kmr', name: 'Kuchipudi', origin: 'Andhra Pradesh',
+            details: {
+                mythology: "Originates from the village of Kuchelapuram. Traditionally performed by men, it is known for its quick, rhythmic footwork and dramatic elements.",
+                costumes: "A lightweight saree, typically worn pleated, accessorized with temple jewelry and elaborate braid decorations.",
+                mudras: "A dynamic mix of hastas from the Natya Shastra, famously known for the 'Tarangam' (dancing on a brass plate while balancing a pot of water).",
+                glossary: "Jatis (rhythmic patterns), Shabdam (story based on song), and Daruvu (a small, introductory dance composition).",
+                dancers: ["Vempati Chinna Satyam", "Radha Reddy", "Swapnasundari", "Lakkshmi Narayana Shastri"],
+                arangetram: "The solo debut performance is typically completed between the ages of 12-15 years.",
+            }
+        },
+        'mhtm': {
+            id: 'mhtm', name: 'Mohiniyattam', origin: 'Kerala',
+            details: {
+                mythology: "The 'dance of the enchantress' (Mohini, an avatar of Vishnu). Characterized by gentle, swaying body movements (Lasya) resembling ocean waves.",
+                costumes: "A graceful white or off-white saree with a distinct gold border, minimalist gold jewelry, and a unique high hair bun (Konda).",
+                mudras: "Utilizes a softer, more fluid interpretation of the 24 mudras from the Hastalakshana Deepika, focusing on grace and emotio1n.",
+                glossary: "Cholakettu (the opening piece), Jatiswaram (pure dance), and Attakatha (the expressional or acting part).",
+                dancers: ["Kalyanikutty Amma", "Sunanda Nair", "Deepa Nair"],
+                arangetram: "Varies, with a strong emphasis on controlled emotion and graceful execution.",
+            }
+        },
+    };
+
+    // --- QUIZ DATA ---
+    // Structured questions for each dance style for the flashcard quiz
+    const QUIZ_DATA = {
+        'bn': [
+            { question: "What is the name of the solo debut performance in Bharatanatyam?", answer: "Arangetram" },
+            { question: "Bharatanatyam is rooted in which ancient Indian treatise?", answer: "Natya Shastra" },
+            { question: "What term refers to the ankle bells worn by Bharatanatyam dancers?", answer: "Ghungroos" },
+            { question: "Name one of the 28 Asamyukta (single hand) mudras in Bharatanatyam.", answer: "Pataka, Tripataka, or Mayura" }
+        ],
+        'ktk': [
+            { question: "The word Kathak is derived from which Sanskrit term meaning 'story'?", answer: "Katha" },
+            { question: "What are the rhythmic compositions in Kathak called?", answer: "Tukras, Todas, or Parans" },
+            { question: "Which term refers to the pure footwork sequences in Kathak?", answer: "Tatkar" },
+            { question: "Kathak's style was heavily influenced by the courts of which historical rulers in North India?", answer: "Mughal (courts)" }
+        ],
+        'ktkl': [
+            { question: "Kathakali is known for its elaborate makeup. What is the category of makeup that represents heroic/noble characters (green face)?", answer: "Pacha" },
+            { question: "What are the intense, vigorous dance sequences in Kathakali called?", answer: "Kalasams" },
+            { question: "Kathakali draws themes primarily from which Hindu epics?", answer: "Ramayana and Mahabharata" },
+            { question: "The complex mudra vocabulary of Kathakali is derived from which key text?", answer: "Hastala-kshana Deepika" },
+            { question: "What is the term for the story text or libretto of a Kathakali performance?", answer: "Attakatha" },
+            { question: "What general term is used to describe a complete Kathakali performance (a 'story play')?", answer: "Kaliyattam" }
+        ],
+        'mpr': [
+            { question: "Manipuri dance is strongly linked to the worship of which divine couple?", answer: "Radha and Krishna" },
+            { question: "What is the name of the cylindrical skirt adorned with mirrors worn by female Manipuri dancers?", answer: "Kubak" },
+            { question: "Which element of Manipuri focuses on the drum dance?", answer: "Pung Cholom" },
+            { question: "What are the two opposing elements (vigorous and gentle) central to Manipuri dance?", answer: "Tandava and Lasya" },
+            { question: "Name one of the key soft, suggestive mudras featured in Manipuri dance.", answer: "Chatura or Hamsasya" }
+        ],
+        'ods': [
+            { question: "What is the name of the triple-bend posture that is central to Odissi dance?", answer: "Tribhangi" },
+            { question: "What unique material of jewelry is traditionally worn by Odissi dancers, unlike Bharatanatyam's gold?", answer: "Silver" },
+            { question: "Odissi traditionally drew inspiration from the worship of which deity/Lord of Puri?", answer: "Lord Jagannath" },
+            { question: "What is the opening invocation piece in an Odissi performance called?", answer: "Mangalacharan" }
+        ],
+        'sst': [
+            { question: "Sattriya dance originated as a medium to propagate the Vaishnava faith by which 15th-century saint?", answer: "Srimanta Sankardev" },
+            { question: "What are the fundamental body exercises or 'ground exercises' in Sattriya called?", answer: "Mati Akharas" },
+            { question: "Sattriya is traditionally performed within monasteries known as what?", answer: "Sattras" },
+            { question: "What is the name of the narrator character who links the performance in Sattriya?", answer: "Sutradhara" },
+            { question: "What specific type of Assamese silk is traditionally used for Sattriya costumes?", answer: "Pat or Muga" }
+        ],
+        'kmr': [
+            { question: "Kuchipudi famously includes the 'Tarangam,' where the dancer performs while balancing on what?", answer: "A brass plate" },
+            { question: "In which South Indian state did Kuchipudi originate?", answer: "Andhra Pradesh" },
+            { question: "What is the rhythmic pattern unit in Kuchipudi called?", answer: "Jati" },
+            { question: "What is the name of the introductory dance composition in Kuchipudi?", answer: "Daruvu" }
+        ],
+        'mhtm': [
+            { question: "Mohiniyattam is characterized by gentle, swaying movements that resemble what natural phenomenon?", answer: "Ocean waves" },
+            { question: "The name Mohiniyattam literally translates to the 'dance of the enchantress,' named after which female avatar of Vishnu?", answer: "Mohini" },
+            { question: "What is the opening piece in a Mohiniyattam performance?", answer: "Cholakettu" },
+            { question: "What is the unique high hair bun specific to Mohiniyattam costume called?", answer: "Konda" },
+            { question: "Mohiniyattam heavily emphasizes which aspect of dance, meaning 'graceful and gentle'?", answer: "Lasya" }
+        ],
+    };
+
+    // --- Quiz State Variables ---
+    let currentQuizData = [];
+    let currentQuestionIndex = 0;
+    let currentStyleId = '';
+
+
+    // --- Configuration and Utility Functions ---
+
+    const STYLE_SUBHEADINGS = {
+        mythology: "Mythology & Origin",
+        costumes: "Costumes",
+        mudras: "Mudras / Gestures",
+        glossary: "Technical Glossary",
+        dancers: "Famous Dancers",
+        arangetram: "Arangetram Minimum Age",
+        classes: "Offline Classes Near You 📍"
+    };
+
+    let quizMode = 'learn'; // 'learn' or 'test'
+
+    function showModal(title, body) {
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalBody').innerHTML = body;
+        document.getElementById('customModal').classList.remove('hidden');
+        document.getElementById('customModal').classList.add('flex');
+    }
+
+    function hideModal() {
+        document.getElementById('customModal').classList.add('hidden');
+        document.getElementById('customModal').classList.remove('flex');
+    }
+
+    function hideAllViews() {
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.add('hidden');
+        });
+    }
+
+    // --- View Management Logic ---
+
+    function showView(viewId, styleId = null) {
+        hideAllViews();
+
+        if (viewId === 'home') {
+            document.getElementById('home-view').classList.remove('hidden');
+        } else if (viewId === 'learn') {
+            quizMode = 'learn';
+            document.getElementById('selection-title').textContent = "Select a Classical Dance Style to Learn";
+            document.getElementById('selection-subtitle').textContent = "Click on a tile to delve deep into the specifics of its tradition.";
+            renderStyleSelectionView();
+            document.getElementById('style-selection-view').classList.remove('hidden');
+        } else if (viewId === 'quiz-select') {
+            quizMode = 'test';
+            document.getElementById('selection-title').textContent = "Select a Classical Dance Style for Quiz";
+            document.getElementById('selection-subtitle').textContent = "Click on a tile to begin a knowledge quiz.";
+            renderStyleSelectionView();
+            document.getElementById('style-selection-view').classList.remove('hidden');
+        } else if (viewId === 'detail' && styleId) {
+            loadStyleDetail(styleId);
+            document.getElementById('detail-layout').classList.remove('hidden');
+        } else if (viewId === 'quiz' && styleId) {
+            startQuiz(styleId);
+            document.getElementById('quiz-view').classList.remove('hidden');
+        }
+    }
+
+    function getStyleIcon(styleId) {
+        // Simple Emojis/SVGs representing the dance form's state/region
+        switch(styleId) {
+            case 'bn': return '<span class="text-4xl">🔱</span>'; // Bharatanatyam: Trident (Shiva Nataraja)
+            case 'ktk': return '<span class="text-4xl">🥁</span>'; // Kathak: Tabla/Rhythm
+            case 'ktkl': return '<span class="text-4xl">🎭</span>'; // Kathakali: Mask/Theatre
+            case 'mpr': return '<span class="text-4xl">🪷</span>'; // Manipuri: Lotus/Softness
+            case 'ods': return '<span class="text-4xl">🧘‍♀️</span>'; // Odissi: Pose/Tribhangi
+            case 'sst': return '<span class="text-4xl">🙏</span>'; // Sattriya: Prayer/Bhakti
+            case 'kmr': return '<span class="text-4xl">🏺</span>'; // Kuchipudi: Brass plate/Pot
+            case 'mhtm': return '<span class="text-4xl">🦢</span>'; // Mohiniyattam: Swan/Grace
+            default: return '<span class="text-4xl">✨</span>';
+        }
+    }
+
+    function renderStyleSelectionView() {
+        const grid = document.getElementById('style-grid');
+        grid.innerHTML = '';
+        
+        // Action determined by the global quizMode variable
+        const nextAction = quizMode === 'learn' ? 'detail' : 'quiz';
+
+        Object.keys(DANCE_DATA).forEach(styleId => {
+            const style = DANCE_DATA[styleId];
+            const action = `showView('${nextAction}', '${styleId}')`;
+
+            const blockHTML = `
+                <button onclick="${action}" class="style-block p-6 bg-white rounded-xl shadow-lg border-2 border-gray-100 hover:border-accent transition duration-200 text-center space-y-3 transform hover:scale-[1.03]">
+                    ${getStyleIcon(styleId)}
+                    <p class="text-lg font-semibold text-rhythm">${style.name}</p>
+                    <p class="text-xs text-gray-500">${style.origin}</p>
+                </button>
+            `;
+            grid.innerHTML += blockHTML;
+        });
+    }
+
+    // --- Detail View Generation ---
+
+    function loadStyleDetail(styleId) {
+        const style = DANCE_DATA[styleId];
+        document.getElementById('styleDetailTitle').textContent = `${style.name} (${style.origin})`;
+        
+        const contentDiv = document.getElementById('styleContent');
+        const sidebarNav = document.getElementById('detail-sidebar');
+        
+        let contentHTML = '';
+        let sidebarHTML = '<h4 class="text-xl font-medium mb-4 text-rhythm border-b pb-2">Sections</h4>';
+
+        // 1. Generate Dynamic Sidebar and Content Sections
+        Object.keys(STYLE_SUBHEADINGS).forEach(key => {
+            const title = STYLE_SUBHEADINGS[key];
+            const data = style.details[key];
+            const anchorId = `section-${key}`;
+
+            // Add item to the dynamic sidebar
+            sidebarHTML += `
+                <a href="#${anchorId}" class="sidebar-button block w-full py-2 px-3 mb-1 rounded-lg text-gray-700 hover:bg-gray-200 transition duration-100">
+                    ${title}
+                </a>
+            `;
+
+            // Add the content section with its anchor
+            contentHTML += `
+                <div id="${anchorId}" class="pt-6"> 
+                    <h4 class="text-xl font-semibold text-rhythm border-b border-primary-light pb-1 mb-3">${title}</h4>
+            `;
+            
+            // 2. Format content as an Unordered List (UL)
+            if (Array.isArray(data)) {
+                // Famous Dancers: display as list of names
+                contentHTML += `<ul class="list-disc list-inside space-y-1 pl-4 text-gray-700">`;
+                data.forEach(item => {
+                    contentHTML += `<li>${item}</li>`;
+                });
+                contentHTML += `</ul>`;
+            } else if (key === 'classes') {
+                // Offline Classes: Special case for Geolocation button
+                contentHTML += `
+                    <p class="text-gray-700 mb-3">Use your location to find nearby ${style.name} classes.</p>
+                    <button onclick="findLocalClasses('${style.name}')" class="mt-2 px-6 py-2 bg-primary-light text-white rounded-lg hover:bg-primary-dark transition duration-150 shadow">
+                        Find Nearest Classes
+                    </button>
+                    <div id="classResults" class="mt-4 p-4 bg-gray-50 rounded-lg border">
+                        <p class="text-sm text-gray-500">Click the button above to get local class suggestions.</p>
+                    </div>
+                `;
+            } else {
+                // All other text fields: display as a single list item for consistency
+                contentHTML += `<ul class="list-disc list-inside space-y-1 pl-4 text-gray-700"><li>${data}</li></ul>`;
+            }
+
+            contentHTML += `</div>`; // Close section div
+        });
+
+        contentDiv.innerHTML = contentHTML;
+        sidebarNav.innerHTML = sidebarHTML;
+    }
+
+
+    // --- Geolocation and Class Suggestion Logic (Uses Navigator API) ---
+
+    function findLocalClasses(styleName) {
+        const resultsDiv = document.getElementById('classResults');
+        resultsDiv.innerHTML = '<p class="text-accent font-semibold">🔍 Searching for your location and local classes...</p>';
+        
+        const dummyClasses = {
+            'Bharatanatyam': [
+                { name: 'Abhinaya Academy', contact: '98765-43210' },
+                { name: 'Nritya Mandir', contact: '87654-32109' }
+            ],
+            'Kathak': [
+                { name: 'Gharana School of Dance', contact: '76543-21098' }
+            ],
+            // Default for others
+            'Default': [
+                { name: 'Classical Arts Institute', contact: '65432-10987' }
+            ]
+        };
+
+        const classes = dummyClasses[styleName] || dummyClasses['Default'];
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude.toFixed(4);
+                    const lon = position.coords.longitude.toFixed(4);
+                    
+                    let resultHTML = `<p class="font-bold text-green-700">✅ Location Found (Simulated Results):</p>
+                                      <p class="text-xs mb-3">Lat: ${lat}, Lon: ${lon}</p>`;
+
+                    classes.forEach(cls => {
+                        resultHTML += `
+                            <div class="p-3 bg-white rounded-lg shadow-sm mb-2">
+                                <p class="font-semibold text-rhythm">${cls.name}</p>
+                                <p class="text-sm">Contact: <a href="tel:${cls.contact}" class="text-blue-500 hover:underline">${cls.contact}</a></p>
+                            </div>
+                        `;
+                    });
+
+                    resultHTML += '<p class="text-xs mt-3 italic text-gray-500">Note: Actual class search requires integration with a paid map/places API; these results are simulated for demonstration.</p>';
+                    resultsDiv.innerHTML = resultHTML;
+
+                },
+                (error) => {
+                    // Log specific error details for better debugging
+                    console.error("Geolocation error:", `Code: ${error.code}, Message: ${error.message}`);
+                    
+                    let errorMessage = 'Location access denied or unavailable.';
+                    if (error.code === 1) {
+                        errorMessage = 'Access Denied: Please allow location access for this feature.';
+                    } else if (error.code === 2) {
+                        errorMessage = 'Position Unavailable: The network could not locate you.';
+                    } else if (error.code === 3) {
+                        errorMessage = 'Timeout: Failed to get location within the allowed time.';
+                    }
+
+                    resultsDiv.innerHTML = `<p class="text-red-600 font-bold">❌ Error: ${errorMessage}</p><p class="text-sm">Please ensure location services are enabled for this application.</p>`;
+                }
+            );
+        } else {
+            resultsDiv.innerHTML = "<p class='text-red-600 font-bold'>❌ Error: Geolocation is not supported by your browser.</p>";
+        }
+    }
+
+    // --- Quiz Logic (Dynamic Flashcards) ---
+
+    function startQuiz(styleId) {
+        currentStyleId = styleId;
+        
+        // Load, check, and shuffle data
+        const quizData = QUIZ_DATA[styleId];
+        if (!quizData || quizData.length === 0) {
+            showModal("Error", `Quiz data for ${DANCE_DATA[styleId].name} is currently unavailable.`);
+            return;
+        }
+        
+        // Shuffle questions for a new experience each time
+        currentQuizData = quizData.sort(() => Math.random() - 0.5);
+        currentQuestionIndex = 0;
+
+        document.getElementById('quizTitle').textContent = `${DANCE_DATA[styleId].name} Knowledge Quiz`;
+        
+        // Render the first question
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const flashcard = document.getElementById('flashcard');
+        const totalQuestions = currentQuizData.length;
+        const currentQ = currentQuizData[currentQuestionIndex];
+
+        if (!currentQ) {
+            // End of Quiz
+            flashcard.innerHTML = `
+                <div class="text-center">
+                    <p class="text-2xl font-bold mb-4">Quiz Finished! 🎉</p>
+                    <p class="text-xl mb-6">You successfully reviewed all ${totalQuestions} flashcards.</p>
+                    <p class="text-sm text-rhythm">Try to recall the answer before hitting the 'Reveal' button!</p>
+                </div>
+                <button onclick="showView('quiz-select')" class="mt-8 px-6 py-3 bg-accent text-rhythm rounded-lg hover:bg-yellow-600 transition duration-150 shadow">
+                    Choose Another Style
+                </button>
+            `;
+            return;
+        }
+
+        // Render the question card
+        flashcard.innerHTML = `
+            <div id="quizContent" class="text-left min-h-[150px]">
+                <p class="text-sm font-light text-gray-800 mb-2">Question ${currentQuestionIndex + 1} of ${totalQuestions}</p>
+                <p class="text-xl font-bold mb-6">${currentQ.question}</p>
+            </div>
+            <button id="answerBtn" onclick="revealAnswer()" class="mt-4 px-6 py-3 bg-accent text-rhythm rounded-lg hover:bg-yellow-400 transition duration-150 shadow">
+                Reveal Answer
+            </button>
+        `;
+    }
+
+    function revealAnswer() {
+        const quizContent = document.getElementById('quizContent');
+        const answerBtn = document.getElementById('answerBtn');
+        const currentQ = currentQuizData[currentQuestionIndex];
+
+        // 1. Show Answer
+        quizContent.innerHTML += `
+            <div class="mt-4 p-4 bg-white text-gray-800 rounded-lg shadow-md border-2 border-accent">
+                <p class="font-bold text-rhythm">Answer:</p>
+                <p>${currentQ.answer}</p>
+            </div>
+        `;
+        
+        // 2. Update Button to move to next question
+        answerBtn.textContent = 'Next Question →';
+        answerBtn.onclick = nextQuestion;
+        
+        // --- START OF REQUIRED CHANGE ---
+        // Change the button style to a light background with dark text (text-rhythm) 
+        // to keep the requested dark text color and ensure high contrast.
+        answerBtn.classList.remove('bg-accent', 'text-rhythm', 'hover:bg-yellow-400');
+        // New style: light gray background, dark mahogany text
+        answerBtn.classList.add('bg-gray-100', 'text-rhythm', 'hover:bg-gray-200');
+        // --- END OF REQUIRED CHANGE ---
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        renderQuestion();
+    }
+
+    // --- Initialisation ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Start on the new 'home' view
+        showView('home'); 
+    });
+</script>
+ 
+</body>
+</html>
